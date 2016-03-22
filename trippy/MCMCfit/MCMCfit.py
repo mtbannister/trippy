@@ -22,6 +22,7 @@ __author__ = 'Wesley Fraser (@wtfastro, github: fraserw <westhefras@gmail.com>),
 
 import numpy as num, scipy as sci,emcee
 from trippy import bgFinder
+import pickle
 
 def lnprob(r,dat,lims,psf,ue,useLinePSF,verbose=False):
     psf.nForFitting+=1
@@ -29,12 +30,12 @@ def lnprob(r,dat,lims,psf,ue,useLinePSF,verbose=False):
     (a,b)=dat.shape
     if  amp<=0 or x>=b or x<=0 or y<=0 or y>=a: return -num.inf
     diff=psf.remove(x,y,amp,dat,useLinePSF=useLinePSF)[lims[0]:lims[1],lims[2]:lims[3]]
-    chi=-0.5*num.sum(diff**2/ue[lims[0]:lims[1],lims[2]:lims[3]]**2)**0.5
+    chi=-0.5*num.sum(diff**2/ue[lims[0]:lims[1],lims[2]:lims[3]]**2)
     if verbose: print '{:6d} {: 8.3f} {: 8.3f} {: 8.3f} {: 10.3f}'.format(psf.nForFitting,x,y,amp,chi)
     return chi
 
 
-def lnprobDouble(r,dat,psf,ue,useLinePSF,verbose=False):
+def lnprobDouble(r,dat,lims,psf,ue,useLinePSF,verbose=False):
     psf.nForFitting+=1
     (A,B)=dat.shape
     (X,Y,AMP,x,y,amp)=r
@@ -42,7 +43,7 @@ def lnprobDouble(r,dat,psf,ue,useLinePSF,verbose=False):
 
     diff=psf.remove(X,Y,AMP,dat,useLinePSF=useLinePSF)
     diff=psf.remove(x,y,amp,diff,useLinePSF=useLinePSF)
-    chi=-0.5*num.sum((diff**2/ue**2))#/(A*B-7)
+    chi=-0.5*num.sum((diff**2/ue**2)[lims[0]:lims[1],lims[2]:lims[3]])
     #chi=-num.sum(diff**2)**0.5
     if verbose:
         print '{:6d} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 10.3f}'.format(psf.nForFitting,x,y,amp,X,Y,AMP,chi)
@@ -52,10 +53,23 @@ def lnprobDouble(r,dat,psf,ue,useLinePSF,verbose=False):
 
 class MCMCfitter:
 
-    def __init__(self,psf,imageData):
+    def __init__(self,psf,imageData,restore=False):
+        """
+        Initialize a fitter object which essentially wraps convenience around the already convenient emcee code.
+
+        Input:
+        psf is the trippy model psf object
+        imageData is the data on which the fit will be performed.
+
+        Use restore=fileName to import a dump fit file saved by saveState.
+
+        """
         self.psf=psf
         self.imageData=num.copy(imageData)
         self.fitted=False
+
+        if restore:
+            self._restoreState(restore)
 
     def fitWithModelPSF(self,x_in,y_in,m_in=-1.,fitWidth=20,
                         nWalkers=20,nBurn=10,nStep=20,
@@ -132,14 +146,16 @@ class MCMCfitter:
         self.dat=num.copy(dat)
         self.fitted=True
 
-
-    def fitResults(self,confidenceRange=0.67):
+    def fitResults(self, confidenceRange=0.67, returnSamples=False):
         """
         Return the best point and confidence interval.
 
         confidenceRange - the range for the returned confidence interval
 
         Returns (bestPoint, confidenceArray) Will return None if a fit hasn't been run yet.
+
+        If the fit is a binary fit (6 parameters) fitRange will have a 10 elements which is the range of uncertain on
+        the brightness ratio, and the Primary-Secondary separation in x/y and total (in pixels).
         """
 
         if not self.fitted:
@@ -163,7 +179,7 @@ class MCMCfitter:
         print 'Best point:',bp
         self.residual=self.psf.remove(bp[0],bp[1],bp[2],self.dat,useLinePSF=self.useLinePSF)
         if b==6:
-            self.residual=self.psf.remove(bp[3],bp[4],bp[5],self.residual,useLinePSF=useLinePSF)
+            self.residual=self.psf.remove(bp[3],bp[4],bp[5],self.residual,useLinePSF=self.useLinePSF)
         self.fitFlux=num.sum(self.psf.model)*self.psf.fitFluxCorr
 
         uncert=[]
@@ -174,7 +190,24 @@ class MCMCfitter:
             b=1-a
             uncert.append([x[int(a)],
                            x[int(b)]])
-        return (bp,uncert)
+
+        if len(uncert)==6:
+            x=num.sort(goodSamps[:,5]/goodSamps[:,2])
+            a=len(x)*(1-confidenceRange)/2
+            b=1-a
+            uncert.append([x[int(a)],
+                           x[int(b)]])
+            x = num.sort(goodSamps[:, 0] - goodSamps[:, 3])
+            uncert.append([x[int(a)],
+                           x[int(b)]])
+            x = num.sort(goodSamps[:, 1] - goodSamps[:, 4])
+            uncert.append([x[int(a)],
+                           x[int(b)]])
+            x = num.sort(((goodSamps[:, 1] - goodSamps[:, 4])**2+(goodSamps[:, 0] - goodSamps[:, 3])**2)**0.5)
+            uncert.append([x[int(a)],
+                           x[int(b)]])
+        if not returnSamples: return (bp, uncert)
+        return (bp, uncert, goodSamps)
 
 
     def fitDoubleWithModelPSF(self,x_in,y_in,X_in,Y_in,bRat_in,m_in=-1.,bg=None,
@@ -201,17 +234,19 @@ class MCMCfitter:
         verbose - if set to true, lots of information printed to screen
         """
 
-        print "\n\n\nTHIS HASN'T BEEN FULLY TESTED YET!!!\n\n\n"
+
+        self.useLinePSF=useLinePSF
 
         (A,B)=self.imageData.shape
         ai=max(0,int((y_in+Y_in)/2)-fitWidth)
-        bi=min(A,int((y_in+Y_in)/2)+fitWidth)
+        bi=min(A,int((y_in+Y_in)/2)+fitWidth+1)
         ci=max(0,int((x_in+X_in)/2)-fitWidth)
-        di=min(B,int((x_in+X_in)/2)+fitWidth)
-        dat=self.imageData[ai:bi,ci:di]
+        di=min(B,int((x_in+X_in)/2)+fitWidth+1)
+        dat=num.copy(self.imageData)
+
 
         if bg==None:
-            bgf=bgFinder.bgFinder(imageData)
+            bgf=bgFinder.bgFinder(self.imageData)
             bg=bgf.smartBackground()
             dat-=bg
 
@@ -232,17 +267,30 @@ class MCMCfitter:
         nDim=6
         r0=[]
         for ii in range(nWalkers):
-            r0.append(num.array([x_in-ci,y_in-ai,m_in,X_in-ci,Y_in-ai,m_in*bRat_in])+sci.randn(6)*num.array([1.,1.,
+            r0.append(num.array([x_in,y_in,m_in,X_in,Y_in,m_in*bRat_in])+sci.randn(6)*num.array([1.,1.,
                                                                                                           m_in*0.4,
                                                                                                     1.,1.,
                                                                                                m_in*0.4*bRat_in]))
         r0=num.array(r0)
 
-        sampler=emcee.EnsembleSampler(nWalkers,nDim,lnprobDouble,args=[dat,self.psf,ue,useLinePSF,verbose])
+        sampler=emcee.EnsembleSampler(nWalkers,nDim,lnprobDouble,args=[dat,(ai,bi,ci,di),self.psf,ue,self.useLinePSF,verbose])
         pos, prob, state=sampler.run_mcmc(r0,nBurn)
         sampler.reset()
         pos, prob, state = sampler.run_mcmc(pos, nStep, rstate0=state)
         self.samps=sampler.chain
         self.probs=sampler.lnprobability
         self.dat=num.copy(dat)
+        self.fitted=True
+
+    def saveState(self,fn='MCState.pickle'):
+        """
+        Save the fitted state to the provided filename.
+        """
+        if not self.fitted: raise Exception('You must run a fit before you can save the fit results.')
+        with open(fn,'w+') as han:
+            pickle.dump([self.samps,self.probs,self.dat,self.useLinePSF],han)
+
+    def _restoreState(self,fn='MCState.pickle'):
+        with open(fn) as han:
+            (self.samps,self.probs,self.dat,self.useLinePSF)=pickle.load(han)
         self.fitted=True
