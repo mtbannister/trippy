@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+from __future__ import absolute_import
 
 # Copyright (C) 2016  Wesley Fraser
 #
@@ -24,8 +25,8 @@ from scipy import interpolate as interp
 from astropy.visualization import interval
 from stsci import numdisplay
 
-from trippy_utils import expand2d, line
-import bgFinder
+from .trippy_utils import (expand2d, line)
+from . import bgFinder
 
 
 class pillPhot:

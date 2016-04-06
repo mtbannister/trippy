@@ -35,9 +35,9 @@ if astropyFound:
 else:
     import pyfits as pyf
 
-from pill import pillPhot
-from trippy_utils import (expand2d, downSample2d)
-import bgFinder
+from .pill import pillPhot
+from .trippy_utils import (expand2d, downSample2d)
+from . import bgFinder
 
 
 class modelPSF:

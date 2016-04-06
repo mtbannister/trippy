@@ -22,7 +22,7 @@ import numpy as num
 from stsci import numdisplay
 from astropy.visualization import interval
 
-from trippy import (bgFinder, psf)
+from . import (bgFinder, psf)
 
 
 class starChooser:
