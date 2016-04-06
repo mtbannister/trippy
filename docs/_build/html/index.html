@@ -39,46 +39,51 @@
   <div class="section" id="welcome-to-trippy-s-documentation">
 <h1>Welcome to trippy&#8217;s documentation!<a class="headerlink" href="#welcome-to-trippy-s-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Welcome to trippy&#8217;s documentation!</a></li>
+</ul>
+</div>
 <div class="section" id="module-trippy.psf">
 <span id="psf"></span><h2>PSF<a class="headerlink" href="#module-trippy.psf" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="trippy.psf.modelPSF">
 <em class="property">class </em><code class="descclassname">trippy.psf.</code><code class="descname">modelPSF</code><span class="sig-paren">(</span><em>x=-1</em>, <em>y=-1</em>, <em>alpha=-1</em>, <em>beta=-1</em>, <em>repFact=10</em>, <em>verbose=False</em>, <em>restore=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provides a model PSF of either stationary or trailed point sources.
-The basic profile is a moffat profile with super sampled constant look up table.
-Both are used with linear convolution to calculate the trailed source PSF.</p>
-<p>The general steps for psf generation and photometry are:
--initialization
--lookup table generation
--psf generation
--line convolution
--linear aperture correction estimation</p>
+<dd><p>Provides a model PSF of either stationary or trailed point sources.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>or numpy.arange(x) x</strong> (<em>int</em>) &#8211; the width of the desired PSF image: in pixels, or an array of that length
-e.g. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix</li>
-<li><strong>or numpy.arange(x) y</strong> (<em>int</em>) &#8211; the height of the PSF in pixels: in pixels, or an array of that length</li>
-<li><strong>alpha</strong> (<em>float</em>) &#8211; the initial moffat parameter. Suggest 5</li>
-<li><strong>beta</strong> (<em>float</em>) &#8211; the initial moffat parameter. Suggest 2</li>
-<li><strong>repFact</strong> (<em>int</em>) &#8211; the supersampling factor. Only 5 and 10 are well tested!
+<li><strong>or numpy.arange(x) x</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the width of the desired PSF image: in pixels, or an array of that length</li>
+<li><strong>or numpy.arange(x) y</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the height of the PSF in pixels: in pixels, or an array of that length</li>
+<li><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the initial moffat parameter. Suggest 5</li>
+<li><strong>beta</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the initial moffat parameter. Suggest 2</li>
+<li><strong>repFact</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the supersampling factor. Only 5 and 10 are well tested!
 10 is default, though for improvement in speed,
 5 can be used without much loss of PSF or photometric precision</li>
 <li><strong>verbose</strong> (<em>boolean</em>) &#8211; to see a bunch of unnecessary, but informative output.</li>
-<li><strong>restore</strong> (<em>str</em>) &#8211; restore a previously saved psf with this filename.</li>
+<li><strong>restore</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; restore a previously saved psf with this filename.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<p>The basic PSF profile is a moffat profile with super-sampled constant look up table.
+Both are used with linear convolution to calculate the trailed source PSF.</p>
+<p>e.g. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix.</p>
+<p>The general steps for psf generation and photometry are:</p>
+<ul class="simple">
+<li>initialization</li>
+<li>lookup table generation</li>
+<li>psf generation</li>
+<li>line convolution</li>
+<li>linear aperture correction estimation</li>
+</ul>
 <dl class="method">
 <dt id="trippy.psf.modelPSF.FWHM">
 <code class="descname">FWHM</code><span class="sig-paren">(</span><em>fromMoffatProfile=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.FWHM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.FWHM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the moffat profile of the PSF. If fromMoffatProfile=True, or if the lookupTable is not yet calculated,
-the FWHM from a pure moffat profile is returned. Otherwise the lookup table is used.</p>
-<p>Needs to be refactored due to command coupling.</p>
+<dd><p>Return the moffat profile of the PSF.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -87,6 +92,9 @@ the FWHM from a pure moffat profile is returned. Otherwise the lookup table is u
 </tr>
 </tbody>
 </table>
+<p>If fromMoffatProfile=True, or if the lookupTable is not yet calculated,
+the FWHM from a pure moffat profile is returned. Otherwise the lookup table is used.</p>
+<p>Needs to be refactored due to command coupling.</p>
 </dd></dl>
 
 <dl class="method">
@@ -108,10 +116,7 @@ the FWHM from a pure moffat profile is returned. Otherwise the lookup table is u
 <dl class="method">
 <dt id="trippy.psf.modelPSF.computeLineAperCorrFromTSF">
 <code class="descname">computeLineAperCorrFromTSF</code><span class="sig-paren">(</span><em>radii</em>, <em>l</em>, <em>a</em>, <em>display=True</em>, <em>displayAperture=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.computeLineAperCorrFromTSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.computeLineAperCorrFromTSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>This computes the aperture correction directly from the TSF.
-These vaules will be used for interpolation to other values.
-The aperture correction is with respect to the largest aperture provided in radii.
-I recommend 4*FWHM.</p>
+<dd><p>Compute the aperture correction directly from the TSF.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -119,8 +124,8 @@ I recommend 4*FWHM.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>radii</strong> (<em>numpy.ndarray</em>) &#8211; an array of radii on which to calculate the aperture corrections.
 I recommend at least 10 values between 1 and 4 FWHM.</li>
-<li><strong>l</strong> (<em>float</em>) &#8211; length (in pixels) of the pill aperture</li>
-<li><strong>a</strong> (<em>float</em>) &#8211; angle of the pill aperture</li>
+<li><strong>l</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length (in pixels) of the pill aperture</li>
+<li><strong>a</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; angle of the pill aperture</li>
 <li><strong>useLookupTable</strong> (<em>boolean</em>) &#8211; calculate either with just the moffat profile, or with lookuptable included.</li>
 <li><strong>display</strong> (<em>boolean</em>) &#8211; True to show you some plots.</li>
 <li><strong>displayAperture</strong> (<em>boolean</em>) &#8211; True to show you the aperture at each radius.</li>
@@ -129,15 +134,15 @@ I recommend at least 10 values between 1 and 4 FWHM.</li>
 </tr>
 </tbody>
 </table>
+<p>These values will be used for interpolation to other values.
+The aperture correction is with respect to the largest aperture provided in radii.
+I recommend 4*FWHM.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.computeRoundAperCorrFromPSF">
 <code class="descname">computeRoundAperCorrFromPSF</code><span class="sig-paren">(</span><em>radii</em>, <em>useLookupTable=True</em>, <em>display=True</em>, <em>displayAperture=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.computeRoundAperCorrFromPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.computeRoundAperCorrFromPSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>This computes the aperture correction directly from the PSF.
-These values will be used for interpolation to other values.
-The aperture correction is with respect to the largest aperture provided in radii.
-I recommend 4*FWHM.</p>
+<dd><p>Compute the aperture correction directly from the PSF.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -153,6 +158,9 @@ I recommend at least 10 values between 1 and 4 FWHM.</li>
 </tr>
 </tbody>
 </table>
+<p>These values will be used for interpolation to other values.
+The aperture correction is with respect to the largest aperture provided in radii.
+I recommend 4*FWHM.</p>
 </dd></dl>
 
 <dl class="method">
@@ -165,13 +173,13 @@ I recommend at least 10 values between 1 and 4 FWHM.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>imData</strong> (<em>numpy.ndarray</em>) &#8211; the input data</li>
-<li><strong>centX</strong> (<em>float</em>) &#8211; the central X coordinate</li>
-<li><strong>centY</strong> (<em>float</em>) &#8211; the central Y coordinate</li>
-<li><strong>boxSize</strong> (<em>float</em>) &#8211; the width around the centre used in the fitting.</li>
-<li><strong>bgRadius</strong> (<em>float</em>) &#8211; the radius beyond which the background is estimated.</li>
+<li><strong>centX</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the central X coordinate</li>
+<li><strong>centY</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the central Y coordinate</li>
+<li><strong>boxSize</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the width around the centre used in the fitting.</li>
+<li><strong>bgRadius</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the radius beyond which the background is estimated.</li>
 <li><strong>verbose</strong> (<em>boolean</em>) &#8211; True to see a lot of fitting output and a radial plot of each fit.</li>
 <li><strong>logRadPlot</strong> (<em>boolean</em>) &#8211; True to see the plot in log radius.</li>
-<li><strong>mode</strong> (<em>str</em>) &#8211; &#8216;smart&#8217; is the background determination method used. See bgFinder for details.</li>
+<li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; &#8216;smart&#8217; is the background determination method used. See bgFinder for details.</li>
 <li><strong>fixAB</strong> (<em>boolean</em>) &#8211; True to fit only the amplitude.</li>
 <li><strong>fitXY</strong> (<em>boolean</em>) &#8211; <strong>* not currently implemented*</strong></li>
 <li><strong>fitMaxRadius</strong> (<em>boolean</em>) &#8211; <strong>* not currently implemented *</strong></li>
@@ -180,6 +188,7 @@ I recommend at least 10 values between 1 and 4 FWHM.</li>
 </tr>
 </tbody>
 </table>
+<p>:return :</p>
 </dd></dl>
 
 <dl class="method">
@@ -203,6 +212,7 @@ Only useful for ~5 or more stars.</li>
 </tr>
 </tbody>
 </table>
+<p>:return :</p>
 </dd></dl>
 
 <dl class="method">
@@ -213,7 +223,7 @@ Only useful for ~5 or more stars.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>A</strong> (<em>float</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>A</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; </td>
 </tr>
 </tbody>
 </table>
@@ -222,17 +232,16 @@ Only useful for ~5 or more stars.</li>
 <dl class="method">
 <dt id="trippy.psf.modelPSF.line">
 <code class="descname">line</code><span class="sig-paren">(</span><em>rate</em>, <em>angle</em>, <em>dt</em>, <em>pixScale=0.2</em>, <em>display=False</em>, <em>useLookupTable=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the TSF, given input rate of motion, angle of motion, length of exposure, and pixel scale.
-Choice of units is irrelevant, as long as they are all the same! eg. rate in &#8220;/hr, and dt in hr.</p>
+<dd><p>Compute the trailed source function (TSF).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>rate</strong> (<em>float</em>) &#8211; rate of sky motion of moving object</li>
-<li><strong>angle</strong> (<em>float</em>) &#8211; angle of sky motion of moving object in degrees +-90 from horizontal.</li>
-<li><strong>dt</strong> (<em>float</em>) &#8211; length of exposure</li>
-<li><strong>pixScale</strong> (<em>float</em>) &#8211; pixel scale of image</li>
+<li><strong>rate</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; rate of sky motion of moving object</li>
+<li><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; angle of sky motion of moving object in degrees +-90 from horizontal.</li>
+<li><strong>dt</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; length of exposure</li>
+<li><strong>pixScale</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; pixel scale of image</li>
 <li><strong>display</strong> (<em>boolean</em>) &#8211; True to see the TSF</li>
 <li><strong>useLookupTable</strong> (<em>boolean</em>) &#8211; True to use the lookup table. Otherwise pure moffat is used.</li>
 </ul>
@@ -240,23 +249,24 @@ Choice of units is irrelevant, as long as they are all the same! eg. rate in &#8
 </tr>
 </tbody>
 </table>
+<p>Choice of units is irrelevant, as long as they are all the same! eg. rate in &#8220;/hr, and dt in hr.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.lineAperCorr">
 <code class="descname">lineAperCorr</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.lineAperCorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.lineAperCorr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce an aperture correction at given radius.
-Uses linear interpolation between values found in computeRoundAperCorrFromTSF.</p>
+<dd><p>Produce an aperture correction at given radius.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>float</em>) &#8211; radius to measure at</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; radius to measure at</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return float:</th><td class="field-body">an aperture correction at given radius.</td>
 </tr>
 </tbody>
 </table>
+<p>Uses linear interpolation between values found in computeRoundAperCorrFromTSF.</p>
 </dd></dl>
 
 <dl class="method">
@@ -285,9 +295,9 @@ Uses linear interpolation between values found in computeRoundAperCorrFromTSF.</
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>x</strong> (<em>int</em>) &#8211; the x coordinate to plant the star at</li>
-<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate to plant the star at</li>
-<li><strong>amp</strong> (<em>float</em>) &#8211; the amplitude of the star to plant</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the x coordinate to plant the star at</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the y coordinate to plant the star at</li>
+<li><strong>amp</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the amplitude of the star to plant</li>
 <li><strong>indata</strong> (<em>numpy.ndarray</em>) &#8211; the array in which you want to plant the source.</li>
 <li><strong>addNoise</strong> (<em>boolean</em>) &#8211; True to add gaussian noise.</li>
 <li><strong>useLinePSF</strong> (<em>boolean</em>) &#8211; True to use the TSF rather than the circular PSF.</li>
@@ -308,7 +318,7 @@ containing the TSF or PSF without noise added.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>str</em>) &#8211; the fits filename.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the fits filename.</td>
 </tr>
 </tbody>
 </table>
@@ -317,15 +327,15 @@ containing the TSF or PSF without noise added.</li>
 <dl class="method">
 <dt id="trippy.psf.modelPSF.remove">
 <code class="descname">remove</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>amp</em>, <em>data</em>, <em>useLinePSF=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>The opposite of plant.</p>
+<dd><p>The opposite of plant: removes a source at a given location from an image.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>x</strong> (<em>int</em>) &#8211; the x coordinate to remove the star from</li>
-<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate to remove the star from</li>
-<li><strong>amp</strong> (<em>float</em>) &#8211; the amplitude of the star to remove</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the x coordinate to remove the star from</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; the y coordinate to remove the star from</li>
+<li><strong>amp</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the amplitude of the star to remove</li>
 <li><strong>data</strong> (<em>numpy.ndarray</em>) &#8211; the array from which to remove the source.</li>
 <li><strong>useLinePSF</strong> (<em>boolean</em>) &#8211; False to use the circular PSF by default.</li>
 </ul>
@@ -333,23 +343,24 @@ containing the TSF or PSF without noise added.</li>
 </tr>
 </tbody>
 </table>
+<p>:return :</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.roundAperCorr">
 <code class="descname">roundAperCorr</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.roundAperCorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.roundAperCorr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Produce an aperture correction at given radius.
-Uses linear interpolation between values found in computeRoundAperCorrFromPSF.</p>
+<dd><p>Produce an aperture correction at given radius.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>float</em>) &#8211; radius to measure at</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; radius to measure at</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return float:</th><td class="field-body">an aperture correction at given radius.</td>
 </tr>
 </tbody>
 </table>
+<p>Uses linear interpolation between values found in computeRoundAperCorrFromPSF.</p>
 </dd></dl>
 
 <dl class="method">
@@ -360,7 +371,7 @@ Uses linear interpolation between values found in computeRoundAperCorrFromPSF.</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; the filename to write the PSF to</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the filename to write the PSF to</td>
 </tr>
 </tbody>
 </table>
@@ -625,7 +636,183 @@ Basic memory enhancements included to speed things up.
 <em class="property">class </em><code class="descclassname">trippy.trippy_utils.</code><code class="descname">line</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/trippy_utils.html#line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.trippy_utils.line" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<span class="target" id="module-trippy.MCMCfit.MCMCfit"></span><span class="target" id="module-trippy.scamp.makeParFiles"></span><dl class="function">
+<span class="target" id="module-trippy.MCMCfit.MCMCfit"></span><dl class="class">
+<dt id="trippy.MCMCfit.MCMCfit.MCMCfitter">
+<em class="property">class </em><code class="descclassname">trippy.MCMCfit.MCMCfit.</code><code class="descname">MCMCfitter</code><span class="sig-paren">(</span><em>psf</em>, <em>imageData</em>, <em>restore=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#MCMCfitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.MCMCfitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A fitter object which essentially wraps convenience around the already convenient emcee code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>psf</strong> (<em>trippy.modelPSF</em>) &#8211; the trippy model psf object</li>
+<li><strong>imageData</strong> (<em>numpy.ndarray</em>) &#8211; the data on which the fit will be performed.</li>
+<li><strong>restore</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the filename to import of a a dump fit file saved by saveState.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="trippy.MCMCfit.MCMCfit.MCMCfitter.fitDoubleWithModelPSF">
+<code class="descname">fitDoubleWithModelPSF</code><span class="sig-paren">(</span><em>x_in</em>, <em>y_in</em>, <em>X_in</em>, <em>Y_in</em>, <em>bRat_in</em>, <em>m_in=-1.0</em>, <em>bg=None</em>, <em>fitWidth=20</em>, <em>nWalkers=30</em>, <em>nBurn=50</em>, <em>nStep=100</em>, <em>useErrorMap=False</em>, <em>useLinePSF=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#MCMCfitter.fitDoubleWithModelPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.MCMCfitter.fitDoubleWithModelPSF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using emcee (It&#8217;s hammer time!) two sources are fit using
+the provided psf to find the best x,y and amplitude, and confidence
+range on the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the x coordinate of the true centroid of the primary of the pair</li>
+<li><strong>y_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the y coordinate of the true centroid of of the primary of the pair</li>
+<li><strong>X_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the x coordinate of the true centroid of the secondary of the pair</li>
+<li><strong>Y_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the y coordinate of the true centroid of the secondary of the pair</li>
+<li><strong>bRat_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the brightness ratio of the two sources</li>
+<li><strong>fitWidth</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the width +- of x_in/y_in of the data used in the fit</li>
+<li><strong>nWalkers</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The number of Goodman &amp; Weare “walkers”. See <a class="reference external" href="http://dan.iel.fm/emcee/current/api/#emcee.EnsembleSampler" title="(in emcee v2.1.0)"><code class="xref py py-class docutils literal"><span class="pre">emcee.EnsembleSampler</span></code></a>.</li>
+<li><strong>nBurn</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The number of iterations to run the chain during burn-in.
+See <code class="xref py py-class docutils literal"><span class="pre">emcee.EnsembleSampler.run_mcmc</span></code>.</li>
+<li><strong>nStep</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The number of iterations to run the chain in the production run.
+See <code class="xref py py-class docutils literal"><span class="pre">emcee.EnsembleSampler.run_mcmc</span></code>.</li>
+<li><strong>bg</strong> &#8211; the background of the image. Needed for the uncertainty table.
+<strong>Defaults to None.</strong>
+When set to default, it will invoke the background measurement and apply that.
+Otherwise, it assumes you are dealing with background subtracted data already.</li>
+<li><strong>useErrorMap</strong> (<em>boolean</em>) &#8211; If true, a simple pixel uncertainty map is used in the fit.
+This is adopted as ue_ij=(imageData_ij+bg)**0.5, that is, the poisson noise estimate.
+Note the fit confidence range is only honest if useErrorMap=True.</li>
+<li><strong>useLinePSF</strong> (<em>boolean</em>) &#8211; If True, use the TSF. If False, use the PSF</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; lots of information printed to screen</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trippy.MCMCfit.MCMCfit.MCMCfitter.fitResults">
+<code class="descname">fitResults</code><span class="sig-paren">(</span><em>confidenceRange=0.67</em>, <em>returnSamples=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#MCMCfitter.fitResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.MCMCfitter.fitResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the best point and confidence interval.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>confidenceRange</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the range for the returned confidence interval</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return tuple:</th><td class="field-body">(bestPoint, confidenceArray) Will return None if a fit hasn&#8217;t been run yet.</td>
+</tr>
+</tbody>
+</table>
+<p>If the fit is to a <strong>binary</strong> source (6 parameters),
+fitRange will have 10 elements, which is the range of uncertainty on the brightness ratio,
+and the Primary-Secondary separation in x/y and total (in pixels).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trippy.MCMCfit.MCMCfit.MCMCfitter.fitWithModelPSF">
+<code class="descname">fitWithModelPSF</code><span class="sig-paren">(</span><em>x_in</em>, <em>y_in</em>, <em>m_in=-1.0</em>, <em>fitWidth=20</em>, <em>nWalkers=20</em>, <em>nBurn=10</em>, <em>nStep=20</em>, <em>bg=None</em>, <em>useErrorMap=False</em>, <em>useLinePSF=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#MCMCfitter.fitWithModelPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.MCMCfitter.fitWithModelPSF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using emcee (It&#8217;s hammer time!) the provided image is fit using
+the provided psf to find the best x,y and amplitude, and confidence
+range on the fitted parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the x coordinate of the true centroid of the object</li>
+<li><strong>y_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the y coordinate of the true centroid of the object</li>
+<li><strong>m_in</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; initial guess on the true amplitude of the object</li>
+<li><strong>fitWidth</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; the width +- of x_in/y_in of the data used in the fit</li>
+<li><strong>nWalkers</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The number of Goodman &amp; Weare “walkers”. See <a class="reference external" href="http://dan.iel.fm/emcee/current/api/#emcee.EnsembleSampler" title="(in emcee v2.1.0)"><code class="xref py py-class docutils literal"><span class="pre">emcee.EnsembleSampler</span></code></a>.</li>
+<li><strong>nBurn</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The number of iterations to run the chain during burn-in.
+See <code class="xref py py-class docutils literal"><span class="pre">emcee.EnsembleSampler.run_mcmc</span></code>.</li>
+<li><strong>nStep</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The number of iterations to run the chain in the production run.
+See <code class="xref py py-class docutils literal"><span class="pre">emcee.EnsembleSampler.run_mcmc</span></code>.</li>
+<li><strong>bg</strong> &#8211; the background of the image. Needed for the uncertainty table.
+<strong>Defaults to None.</strong>
+When set to default, it will invoke the background measurement and apply that.
+Otherwise, it assumes you are dealing with background subtracted data already.</li>
+<li><strong>useErrorMap</strong> (<em>boolean</em>) &#8211; If true, a simple pixel uncertainty map is used in the fit.
+This is adopted as ue_ij=(imageData_ij+bg)**0.5, that is, the poisson noise estimate.
+Note the fit confidence range is only honest if useErrorMap=True.</li>
+<li><strong>useLinePSF</strong> (<em>boolean</em>) &#8211; If True, use the TSF. If False, use the PSF</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; lots of information printed to screen</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trippy.MCMCfit.MCMCfit.MCMCfitter.saveState">
+<code class="descname">saveState</code><span class="sig-paren">(</span><em>fn='MCState.pickle'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#MCMCfitter.saveState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.MCMCfitter.saveState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the fitted state to the provided filename.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the filename to pickle the fitted state to.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="trippy.MCMCfit.MCMCfit.lnprob">
+<code class="descclassname">trippy.MCMCfit.MCMCfit.</code><code class="descname">lnprob</code><span class="sig-paren">(</span><em>r</em>, <em>dat</em>, <em>lims</em>, <em>psf</em>, <em>ue</em>, <em>useLinePSF</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> &#8211; </li>
+<li><strong>dat</strong> &#8211; </li>
+<li><strong>lims</strong> &#8211; </li>
+<li><strong>psf</strong> &#8211; </li>
+<li><strong>ue</strong> &#8211; </li>
+<li><strong>useLinePSF</strong> &#8211; </li>
+<li><strong>verbose</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="trippy.MCMCfit.MCMCfit.lnprobDouble">
+<code class="descclassname">trippy.MCMCfit.MCMCfit.</code><code class="descname">lnprobDouble</code><span class="sig-paren">(</span><em>r</em>, <em>dat</em>, <em>lims</em>, <em>psf</em>, <em>ue</em>, <em>useLinePSF</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/MCMCfit/MCMCfit.html#lnprobDouble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.MCMCfit.MCMCfit.lnprobDouble" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> &#8211; </li>
+<li><strong>dat</strong> &#8211; </li>
+<li><strong>lims</strong> &#8211; </li>
+<li><strong>psf</strong> &#8211; </li>
+<li><strong>ue</strong> &#8211; </li>
+<li><strong>useLinePSF</strong> &#8211; </li>
+<li><strong>verbose</strong> &#8211; print the nForFitting, x, y, amplitude, X, Y, Amplitude, and chisq</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-trippy.scamp.makeParFiles"></span><dl class="function">
 <dt id="trippy.scamp.makeParFiles.writeConv">
 <code class="descclassname">trippy.scamp.makeParFiles.</code><code class="descname">writeConv</code><span class="sig-paren">(</span><em>fileName='default.conv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/scamp/makeParFiles.html#writeConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.scamp.makeParFiles.writeConv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a default sextractor convolution kernel.</p>

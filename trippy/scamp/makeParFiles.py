@@ -29,9 +29,11 @@ def outFile(name, strings):
     return
 
 
-# write the default sextractor convolution kernel to the cwd
 def writeConv(fileName='default.conv'):
-    """Write a default sextractor convolution kernel.
+    """
+    Write a default sextractor convolution kernel.
+
+    :param str fileName: the filename to write the kernel to
     """
     strArr = ['CONV NORM',
               '# 3x3 ``all-ground'' convolution mask with FWHM = 2 pixels.',
@@ -43,15 +45,16 @@ def writeConv(fileName='default.conv'):
     return
 
 
-# write a parameter list to the cwd
-# this is a modified default.param from sextractor
 def writeParam(fileName='def.param', numAps=1):
-    """Write a sex parameter list to the current working directory.
-    Default file is called def.param unless otherwise specified.
-
-    Generally speaking, this file writes out everything you'd need to run both sextractor and scamp.
     """
+    Write a SExtractor parameter list to the current working directory.
 
+    :param str fileName: the filename to write the parameter list to
+    :param int numAps: number of apertures
+
+    This is a modified default.param from SExtractor.
+    Generally speaking, this file writes out everything you'd need to run both SExtractor and scamp.
+    """
     strArr = ['NUMBER',
               '',
               'XWIN_IMAGE',
@@ -95,15 +98,11 @@ def writeParam(fileName='def.param', numAps=1):
     return
 
 
-# write a modified default scamp file
 def writeScamp(fileName='def.scamp', distort=2):
-    """Write a modified nearly-default scamp file to the current 
-    working directory.
+    """Write a modified nearly-default scamp file to the current working directory.
 
-    Options - distort is the order of the geometric distortion for 
-              the scamp fit.
-
-    Default file name is def.scamp unless otherwise specified.
+    :param str fileName: file name to write the scamp file to, def.scamp unless otherwise specified.
+    :param distort: the order of the geometric distortion for the scamp fit.
     """
 
     strArr = ['# Default configuration file for SCAMP modded by Fraser',
@@ -203,23 +202,27 @@ def writeScamp(fileName='def.scamp', distort=2):
     return
 
 
-# write a modified sex file for astrometry purposes in the scampe_.py scripts
 def writeSex(fileName='def.sex', paramFileName='def.param', minArea=20, threshold=8, zpt=27.4, saturate=40000.,
              aperture=11, catalogType='FITS_LDAC', catalogName='def.cat', kron_factor=2.5, min_radius=3.5):
-    """Write a modified sextractor file.
+    """Write a modified SExtractor file for astrometry purposes in the scampe_.py scripts
 
-    Options - paramFileName -the name of the associated parameter
-                             file.
-              minArea - the minimum threshold area for sources. 
-                        Default is 20.
-              threshold - the snr threshold for sources.
-                          default is 8
-              zpt - the photometric zeropoint.
-                    default is 27.4.
-              saturation - the saturation level in adu.
-                           default is 40000.
-              aperture - the photometry aperture in pixels
-                         default is 11.
+    :param str fileName: the file name to write the SExtractor file to
+    :param str paramFileName: the name of the associated parameter file.
+    :param float minArea: the minimum threshold area for sources.
+                    Default is 20.
+    :param float threshold: the signal-to-noise ratio (SNR) threshold for sources.
+                      default is 8
+    :param float zpt: the photometric zeropoint.
+                default is 27.4.
+    :param float saturate: the saturation level, in ADU.
+                     default is 40000.
+    :param float aperture: the photometry aperture in pixels.
+                     default is 11.
+    :param str catalogType:
+    :param str catalogName:
+    :param float kron_factor:
+    :param float min_radius:
+    :return:
     """
 
     if type(aperture) not in [type(1), type([1]), type(1.)]:
@@ -318,8 +321,12 @@ def writeSex(fileName='def.sex', paramFileName='def.param', minArea=20, threshol
     return
 
 
-# write another modified scamp config file used in the scamp_*.py scripts
 def writeScamp2(fileName='wes2.scamp'):
+    """
+    Write a modified scamp config file used in the scamp_*.py scripts
+
+    :param str fileName: the filename to save the scamp config file to
+    """
     strArr = ['# Default configuration file for SCAMP 1.4.6-MP modded by Fraser',
               ' ',
               '#----------------------------- Field grouping ---------------------------------',
