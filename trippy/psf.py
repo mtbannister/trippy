@@ -108,6 +108,8 @@ class modelPSF:
     def _fitsReStore(self, fn):
         """
         Hidden convenience function to restore a psf file.
+
+        :param str fn: the psf file to restore
         """
         print '\nRestoring PSF...'
         name = fn.split('.fits')[0]
@@ -185,14 +187,15 @@ class modelPSF:
         print '   PSF restored.\n'
 
     def __init__(self, x=-1, y=-1, alpha=-1, beta=-1, repFact=10, verbose=False, restore=False):
-        """
-        Initialize the PSF.
+        """Initialize the PSF.
 
-        x,y are the size of the PSF (width, height) in pixels. Can either be an integer value or a numpy.arange(x) array.
-        alpha, beta are the initial moffat parameters
-        repfact=5,10 is the supersampling factor. Only 5 and 10 are well tested!
-        verbose to see a bunch of unnecessary, but informative output.
-        restore=filename to restore a psf having the filename provided.
+        :param x (int or numpy.arange(x)) : the width of the PSF in pixels
+        :param y (int or numpy.arange(x)) : the height of the PSF in pixels
+        :param alpha (float) : the initial moffat parameter
+        :param beta (float) : the initial moffat parameter
+        :param repFact (int) : the supersampling factor. Only 5 and 10 are well tested!
+        :param verbose (boolean) : to see a bunch of unnecessary, but informative output.
+        :param restore (str) to restore a psf with this filename.
         """
 
         self.nForFitting = 0
@@ -298,15 +301,16 @@ class modelPSF:
 
     def computeRoundAperCorrFromPSF(self, radii, useLookupTable=True, display=True, displayAperture=True):
         """
-        This computes the aperture correction directly from the PSF. These vaules will be used for interpolation to
-        other values. The aperture correction is with respect tothe largest aperture provided in radii. I recommend
-        4*FWHM.
+        This computes the aperture correction directly from the PSF.
+        These values will be used for interpolation to other values.
+        The aperture correction is with respect to the largest aperture provided in radii.
+        I recommend 4*FWHM.
 
-        radii is an array of radii on which to calculate the aperture corrections. I recommend at least 10 values
-        between 1 and 4 FWHM.
-        useLookupTable=True/False to calculate either with just the moffat profile, or with lookuptable included.
-        display=True to show you some plots.
-        displayAperture=True to show you the aperture at each radius.
+        :param numpy.ndarray radii: an array of radii on which to calculate the aperture corrections.
+                                    I recommend at least 10 values between 1 and 4 FWHM.
+        :param boolean useLookupTable: calculate either with just the moffat profile, or with lookuptable included.
+        :param boolean display: True to show you some plots.
+        :param boolean displayAperture: True to show you the aperture at each radius.
         """
 
         self.aperCorrRadii = radii * 1.0
@@ -337,8 +341,11 @@ class modelPSF:
 
     def roundAperCorr(self, r):
         """
-        Return an aperture correction at given radius. Linear interpolation between values found in
-        computeRoundAperCorrFromPSF is used.
+        Produce an aperture correction at given radius.
+        Uses linear interpolation between values found in computeRoundAperCorrFromPSF.
+
+        :param float r: radius to measure at
+        :return float: an aperture correction at given radius.
         """
 
         if self.aperCorrFunc <> None:
@@ -349,16 +356,18 @@ class modelPSF:
 
     def computeLineAperCorrFromTSF(self, radii, l, a, display=True, displayAperture=True):
         """
-        This computes the aperture correction directly from the TSF. These vaules will be used for interpolation to
-        other values. The aperture correction is with respect tothe largest aperture provided in radii. I recommend
-        4*FWHM.
+        This computes the aperture correction directly from the TSF.
+        These vaules will be used for interpolation to other values.
+        The aperture correction is with respect to the largest aperture provided in radii.
+        I recommend 4*FWHM.
 
-        radii is an array of radii on which to calculate the aperture corrections. I recommend at least 10 values
-        between 1 and 4 FWHM.
-        l and a are the length (in pixels) and angle of the pill aperture
-        useLookupTable=True/False to calculate either with just the moffat profile, or with lookuptable included.
-        display=True to show you some plots.
-        displayAperture=True to show you the aperture at each radius.
+        :param numpy.ndarray radii: an array of radii on which to calculate the aperture corrections.
+                                    I recommend at least 10 values between 1 and 4 FWHM.
+        :param float l: length (in pixels) of the pill aperture
+        :param float a: angle of the pill aperture
+        :param boolean useLookupTable: calculate either with just the moffat profile, or with lookuptable included.
+        :param boolean display: True to show you some plots.
+        :param boolean displayAperture: True to show you the aperture at each radius.
         """
 
         self.lineAperCorrRadii = radii * 1.0
@@ -386,21 +395,25 @@ class modelPSF:
 
     def lineAperCorr(self, r):
         """
-        Return an aperture correction at given radius. Linear interpolation between values found in
-        computeRoundAperCorrFromTSF is used.
-        """
+        Produce an aperture correction at given radius.
+        Uses linear interpolation between values found in computeRoundAperCorrFromTSF.
 
+        :param float r: radius to measure at
+        :return float: an aperture correction at given radius.
+        """
         if self.lineAperCorrFunc <> None:
             return self.lineAperCorrFunc(r) - num.min(self.lineAperCorrs)
         else:
             raise Exception(
-                'Must first fun computeLineAperCorrFromMoffat before the aperture corrections can be evaluated here.')
+                'Must first run computeLineAperCorrFromMoffat before the aperture corrections can be evaluated here.')
 
     def moffat(self, rad):
         """
         Return a moffat profile evaluated at the radii in the input numpy array.
-        """
 
+        :param numpy.ndarray rad: the radii to evaluate at
+        :return numpy.ndarray: a moffat profile evaluated at the input radii.
+        """
         # normalized flux profile return 1.-(1.+(rad/self.alpha)**2)**(1.-self.beta)
         a2 = self.alpha * self.alpha
         return (self.beta - 1) * (num.pi * a2) * (1. + (rad / self.alpha) ** 2) ** (-self.beta)
@@ -409,6 +422,10 @@ class modelPSF:
         """
         Return the moffat profile of the PSF. If fromMoffatProfile=True, or if the lookupTable is not yet calculated,
         the FWHM from a pure moffat profile is returned. Otherwise the lookup table is used.
+
+        Needs to be refactored due to command coupling.
+
+        :param boolean fromMoffatProfile:
         """
 
         if (not self.fitted) or fromMoffatProfile:
@@ -438,18 +455,25 @@ class modelPSF:
                 r += 0.01
 
     def __getitem__(self, key):
+        '''
+        Create behaviour like a dictionary.
+
+        :param key:
+        :return:
+        '''
         return self.psf[key]
 
     def line(self, rate, angle, dt, pixScale=0.2, display=False, useLookupTable=True):
         """
-        Compute the TSF given input rate of motion, angle of motion, length of exposure, and pixelScale.
+        Compute the TSF, given input rate of motion, angle of motion, length of exposure, and pixel scale.
+        Choice of units is irrelevant, as long as they are all the same! eg. rate in "/hr, and dt in hr.
 
-        Units choice is irrelevant, as long as they are all the same! eg. rate in "/hr, and dt in hr.
-        Angle is in degrees +-90 from horizontal.
-
-        display=True to see the TSF
-
-        useLookupTable=True to use the lookupTable. OTherwise pure moffat is used.
+        :param float rate: rate of sky motion of moving object
+        :param float angle: angle of sky motion of moving object in degrees +-90 from horizontal.
+        :param float dt: length of exposure
+        :param float pixScale: pixel scale of image
+        :param boolean display: True to see the TSF
+        :param boolean useLookupTable: True to use the lookup table. Otherwise pure moffat is used.
         """
 
         self.rate = rate
@@ -494,15 +518,16 @@ class modelPSF:
             pyl.show()
 
     def plant(self, x, y, amp, indata, addNoise=True, useLinePSF=False, returnModel=False):
-        """
-        Plant a star at coordinates x,y with amplitude amp.
+        """Plant a star at coordinates with a given amplitude.
 
-        indata is the array in which you want to plant the source.
-        addNoise=True to add gaussian noise.
-        useLinePSF=True to use the TSF rather than the circular PSF.
-        returnModel=True to not actually plant in the data, but return an array of the same size containing the TSF or
-        PSF without noise added.
-
+        :param int x: the x coordinate to plant the star at
+        :param int y: the y coordinate to plant the star at
+        :param float amp: the amplitude of the star to plant
+        :param numpy.ndarray indata: the array in which you want to plant the source.
+        :param boolean addNoise: True to add gaussian noise.
+        :param boolean useLinePSF: True to use the TSF rather than the circular PSF.
+        :param boolean returnModel: True to not actually plant in the data, but return an array of the same size
+                                    containing the TSF or PSF without noise added.
         """
 
         self.boxSize = len(self.lookupTable) / self.repFact / 2
@@ -567,8 +592,7 @@ class modelPSF:
             psf = downSample2d(lpsf, self.repFact) * amp
 
             w = num.where(psf < 0)
-            psf[
-                w] = 0.0  # this is a cheat to handle the outer edges of the lookup table that can get negative values when convolved
+            psf[w] = 0.0  # this is a cheat to handle the outer edges of the lookup table that can get negative values when convolved
             self.fitFluxCorr = 1.  # HACK! Could get rid of this in the future...
 
         (a, b) = psf.shape
@@ -588,6 +612,12 @@ class modelPSF:
     def remove(self, x, y, amp, data, useLinePSF=False):
         """
         The opposite of plant.
+
+        :param int x: the x coordinate to remove the star from
+        :param int y: the y coordinate to remove the star from
+        :param float amp: the amplitude of the star to remove
+        :param numpy.ndarray data: the array from which to remove the source.
+        :param boolean useLinePSF: False to use the circular PSF by default.
         """
 
         mo = self.plant(x, y, amp, data, addNoise=False, returnModel=True, useLinePSF=useLinePSF)
@@ -598,6 +628,7 @@ class modelPSF:
         """
         Convenient file saving function to save the round PSF. Probably not necessary.
 
+        :param str name: the filename to write the PSF to
         """
 
         try:
@@ -609,19 +640,23 @@ class modelPSF:
         List.writeto(name)
 
     def fitMoffat(self, imData, centX, centY, boxSize=25, bgRadius=20, verbose=False, mode='smart', fixAB=False,
-                  fitXY=False, fitMaxRadius=-1., logRadPlot=False):
+                  logRadPlot=False):
+#                  fitXY=False, fitMaxRadius=-1.):
 
         """
-        Fit a moffat profile to the input data, imData, at point centX,centY.
+        Fit a moffat profile to the input data at a given point.
 
-        boxSize is the width around the centre used in the fitting.
-        bgRadius is the radius beyond which the background is estimated.
-        verbose=True to see a lot of fittnig output and a radial plot of each fit.
-        logRadPlot=True to see the plot in log radius.
-        mode='smart' is the background determination method used. See bgFinder for details.
-        fixAB=True to fit only the amplitude.
-        fitXY=False *** this is currently not implemented***
-        fitMaxRadius ***not currently implemented***
+        :param numpy.ndarray imData: the input data
+        :param float centX: the central X coordinate
+        :param float centY: the central Y coordinate
+        :param float boxSize: the width around the centre used in the fitting.
+        :param float bgRadius: the radius beyond which the background is estimated.
+        :param boolean verbose: True to see a lot of fitting output and a radial plot of each fit.
+        :param boolean logRadPlot: True to see the plot in log radius.
+        :param str mode: 'smart' is the background determination method used. See bgFinder for details.
+        :param boolean fixAB: True to fit only the amplitude.
+        :param boolean fitXY: *** not currently implemented***
+        :param boolean fitMaxRadius: *** not currently implemented ***
         """
 
         self.verbose = verbose
@@ -696,9 +731,13 @@ class modelPSF:
         """
         Generate the lookup table from input imData and x/y coordinates in the numpy arrays centX,centY.
 
-        verbose=True to see a lot of fitting output.
-        bpMask=array to provide a bad pixel mask.
-        threeSigCut=True to apply a 3 sigma cut before reporting the mean lookupTable. Only useful for ~5 or more stars.
+        :param numpy.ndarray imData: input image
+        :param numpy.ndarray centXs: central x coordinate
+        :param numpy.ndarray centYs: central y coordinate
+        :param boolean verbose: True to see a lot of fitting output.
+        :param numpy.ndarray bpMask: provide a bad pixel mask.
+        :param boolean threeSigCut: True to apply a 3 sigma cut before reporting the mean lookupTable.
+                                    Only useful for ~5 or more stars.
         """
 
         adjCentXs = centXs - 0.5
@@ -777,7 +816,9 @@ class modelPSF:
 
     def genPSF(self, A=1.):
         """
-        generate the psf with lookup table. Convenience function only.
+        Generate the psf with lookup table. Convenience function only.
+
+        :param float A:
         """
         self.moffProf = self.moffat(self.R - num.min(self.R))
         self.fullPSF = (self.moffProf + self.lookupTable) * A
@@ -786,6 +827,9 @@ class modelPSF:
     def _flatRadial(self, centX, centY):
         """
         Convenience function for the fitMoffat routines.
+
+        :param float centX: central x coordinate
+        :param float centY: central y coordinate
         """
 
         if type(centX) <> type(1.) and type(centX) <> type(num.float64(1.)):
@@ -822,7 +866,6 @@ class modelPSF:
 
                 arrR[-1].append(D)
 
-
         # subSecFlat=self.subSec.reshape((b-a)*(c-d))
 
         arrR = num.array(arrR)
@@ -833,6 +876,13 @@ class modelPSF:
         # self.fDist=subSecFlat[arg]*1.
 
     def _resid(self, p, maxRad):
+        '''
+        Residuals.
+
+        :param p:
+        :param maxRad:
+        :return:
+        '''
         (A, alpha, beta) = p
         self.alpha = alpha
         self.beta = beta
@@ -850,6 +900,15 @@ class modelPSF:
         return err
 
     def _residFAB(self, p, alpha, beta, maxRad):
+        '''
+        Description here.
+
+        :param p:
+        :param alpha:
+        :param beta:
+        :param maxRad:
+        :return:
+        '''
         (A) = p
         self.alpha = alpha
         self.beta = beta
