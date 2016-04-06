@@ -44,122 +44,260 @@
 <dl class="class">
 <dt id="trippy.psf.modelPSF">
 <em class="property">class </em><code class="descclassname">trippy.psf.</code><code class="descname">modelPSF</code><span class="sig-paren">(</span><em>x=-1</em>, <em>y=-1</em>, <em>alpha=-1</em>, <em>beta=-1</em>, <em>repFact=10</em>, <em>verbose=False</em>, <em>restore=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Round and moving object psf class.</p>
-<p>The intent of this class is to provide a model PSF of both stationary and trailed point sources.
-The basic profile is a moffat profile with super sampled constant look up table. Both are used
-with linear convolution to calculate the trailed source PSF.</p>
-<p>modelPSF takes as input:
--x,y are arrays of length equal to the width and height of the desired PSF image.</p>
-<blockquote>
-<div>eg. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix</div></blockquote>
-<p>-alpha, beta are initial guesses for the moffat profile to be used. 5 and 2 are usually pretty good
--repFact is the supersampling factor. 10 is default, though for improvement in speed, 5 can be used</p>
-<blockquote>
-<div>without much loss of PSF or photometric precision</div></blockquote>
-<p>optional arguments:
--verbose = True if you want to see a lot of unnecessary output
--restore = psf filename if you want to restore from a previously saved psf file.</p>
+<dd><p>Provides a model PSF of either stationary or trailed point sources.
+The basic profile is a moffat profile with super sampled constant look up table.
+Both are used with linear convolution to calculate the trailed source PSF.</p>
 <p>The general steps for psf generation and photometry are:
 -initialization
 -lookup table generation
 -psf generation
 -line convolution
 -linear aperture correction estimation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>or numpy.arange(x) x</strong> (<em>int</em>) &#8211; the width of the desired PSF image: in pixels, or an array of that length
+e.g. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix</li>
+<li><strong>or numpy.arange(x) y</strong> (<em>int</em>) &#8211; the height of the PSF in pixels: in pixels, or an array of that length</li>
+<li><strong>alpha</strong> (<em>float</em>) &#8211; the initial moffat parameter. Suggest 5</li>
+<li><strong>beta</strong> (<em>float</em>) &#8211; the initial moffat parameter. Suggest 2</li>
+<li><strong>repFact</strong> (<em>int</em>) &#8211; the supersampling factor. Only 5 and 10 are well tested!
+10 is default, though for improvement in speed,
+5 can be used without much loss of PSF or photometric precision</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; to see a bunch of unnecessary, but informative output.</li>
+<li><strong>restore</strong> (<em>str</em>) &#8211; restore a previously saved psf with this filename.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="trippy.psf.modelPSF.FWHM">
 <code class="descname">FWHM</code><span class="sig-paren">(</span><em>fromMoffatProfile=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.FWHM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.FWHM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the moffat profile of the PSF. If fromMoffatProfile=True, or if the lookupTable is not yet calculated,
 the FWHM from a pure moffat profile is returned. Otherwise the lookup table is used.</p>
+<p>Needs to be refactored due to command coupling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fromMoffatProfile</strong> (<em>boolean</em>) &#8211; </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="trippy.psf.modelPSF.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create behaviour like a dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.computeLineAperCorrFromTSF">
 <code class="descname">computeLineAperCorrFromTSF</code><span class="sig-paren">(</span><em>radii</em>, <em>l</em>, <em>a</em>, <em>display=True</em>, <em>displayAperture=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.computeLineAperCorrFromTSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.computeLineAperCorrFromTSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>This computes the aperture correction directly from the TSF. These vaules will be used for interpolation to
-other values. The aperture correction is with respect tothe largest aperture provided in radii. I recommend
-4*FWHM.</p>
-<p>radii is an array of radii on which to calculate the aperture corrections. I recommend at least 10 values
-between 1 and 4 FWHM.
-l and a are the length (in pixels) and angle of the pill aperture
-useLookupTable=True/False to calculate either with just the moffat profile, or with lookuptable included.
-display=True to show you some plots.
-displayAperture=True to show you the aperture at each radius.</p>
+<dd><p>This computes the aperture correction directly from the TSF.
+These vaules will be used for interpolation to other values.
+The aperture correction is with respect to the largest aperture provided in radii.
+I recommend 4*FWHM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radii</strong> (<em>numpy.ndarray</em>) &#8211; an array of radii on which to calculate the aperture corrections.
+I recommend at least 10 values between 1 and 4 FWHM.</li>
+<li><strong>l</strong> (<em>float</em>) &#8211; length (in pixels) of the pill aperture</li>
+<li><strong>a</strong> (<em>float</em>) &#8211; angle of the pill aperture</li>
+<li><strong>useLookupTable</strong> (<em>boolean</em>) &#8211; calculate either with just the moffat profile, or with lookuptable included.</li>
+<li><strong>display</strong> (<em>boolean</em>) &#8211; True to show you some plots.</li>
+<li><strong>displayAperture</strong> (<em>boolean</em>) &#8211; True to show you the aperture at each radius.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.computeRoundAperCorrFromPSF">
 <code class="descname">computeRoundAperCorrFromPSF</code><span class="sig-paren">(</span><em>radii</em>, <em>useLookupTable=True</em>, <em>display=True</em>, <em>displayAperture=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.computeRoundAperCorrFromPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.computeRoundAperCorrFromPSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>This computes the aperture correction directly from the PSF. These vaules will be used for interpolation to
-other values. The aperture correction is with respect tothe largest aperture provided in radii. I recommend
-4*FWHM.</p>
-<p>radii is an array of radii on which to calculate the aperture corrections. I recommend at least 10 values
-between 1 and 4 FWHM.
-useLookupTable=True/False to calculate either with just the moffat profile, or with lookuptable included.
-display=True to show you some plots.
-displayAperture=True to show you the aperture at each radius.</p>
+<dd><p>This computes the aperture correction directly from the PSF.
+These values will be used for interpolation to other values.
+The aperture correction is with respect to the largest aperture provided in radii.
+I recommend 4*FWHM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>radii</strong> (<em>numpy.ndarray</em>) &#8211; an array of radii on which to calculate the aperture corrections.
+I recommend at least 10 values between 1 and 4 FWHM.</li>
+<li><strong>useLookupTable</strong> (<em>boolean</em>) &#8211; calculate either with just the moffat profile, or with lookuptable included.</li>
+<li><strong>display</strong> (<em>boolean</em>) &#8211; True to show you some plots.</li>
+<li><strong>displayAperture</strong> (<em>boolean</em>) &#8211; True to show you the aperture at each radius.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.fitMoffat">
-<code class="descname">fitMoffat</code><span class="sig-paren">(</span><em>imData</em>, <em>centX</em>, <em>centY</em>, <em>boxSize=25</em>, <em>bgRadius=20</em>, <em>verbose=False</em>, <em>mode='smart'</em>, <em>fixAB=False</em>, <em>fitXY=False</em>, <em>fitMaxRadius=-1.0</em>, <em>logRadPlot=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.fitMoffat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.fitMoffat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit a moffat profile to the input data, imData, at point centX,centY.</p>
-<p>boxSize is the width around the centre used in the fitting.
-bgRadius is the radius beyond which the background is estimated.
-verbose=True to see a lot of fittnig output and a radial plot of each fit.
-logRadPlot=True to see the plot in log radius.
-mode=&#8217;smart&#8217; is the background determination method used. See bgFinder for details.
-fixAB=True to fit only the amplitude.
-fitXY=False <strong>* this is currently not implemented*</strong>
-fitMaxRadius <strong>*not currently implemented*</strong></p>
+<code class="descname">fitMoffat</code><span class="sig-paren">(</span><em>imData</em>, <em>centX</em>, <em>centY</em>, <em>boxSize=25</em>, <em>bgRadius=20</em>, <em>verbose=False</em>, <em>mode='smart'</em>, <em>fixAB=False</em>, <em>logRadPlot=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.fitMoffat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.fitMoffat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a moffat profile to the input data at a given point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>imData</strong> (<em>numpy.ndarray</em>) &#8211; the input data</li>
+<li><strong>centX</strong> (<em>float</em>) &#8211; the central X coordinate</li>
+<li><strong>centY</strong> (<em>float</em>) &#8211; the central Y coordinate</li>
+<li><strong>boxSize</strong> (<em>float</em>) &#8211; the width around the centre used in the fitting.</li>
+<li><strong>bgRadius</strong> (<em>float</em>) &#8211; the radius beyond which the background is estimated.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; True to see a lot of fitting output and a radial plot of each fit.</li>
+<li><strong>logRadPlot</strong> (<em>boolean</em>) &#8211; True to see the plot in log radius.</li>
+<li><strong>mode</strong> (<em>str</em>) &#8211; &#8216;smart&#8217; is the background determination method used. See bgFinder for details.</li>
+<li><strong>fixAB</strong> (<em>boolean</em>) &#8211; True to fit only the amplitude.</li>
+<li><strong>fitXY</strong> (<em>boolean</em>) &#8211; <strong>* not currently implemented*</strong></li>
+<li><strong>fitMaxRadius</strong> (<em>boolean</em>) &#8211; <strong>* not currently implemented *</strong></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.genLookupTable">
 <code class="descname">genLookupTable</code><span class="sig-paren">(</span><em>imData</em>, <em>centXs</em>, <em>centYs</em>, <em>verbose=False</em>, <em>bpMask=None</em>, <em>threeSigCut=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.genLookupTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.genLookupTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the lookup table from input imData and x/y coordinates in the numpy arrays centX,centY.</p>
-<p>verbose=True to see a lot of fitting output.
-bpMask=array to provide a bad pixel mask.
-threeSigCut=True to apply a 3 sigma cut before reporting the mean lookupTable. Only useful for ~5 or more stars.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>imData</strong> (<em>numpy.ndarray</em>) &#8211; input image</li>
+<li><strong>centXs</strong> (<em>numpy.ndarray</em>) &#8211; central x coordinate</li>
+<li><strong>centYs</strong> (<em>numpy.ndarray</em>) &#8211; central y coordinate</li>
+<li><strong>verbose</strong> (<em>boolean</em>) &#8211; True to see a lot of fitting output.</li>
+<li><strong>bpMask</strong> (<em>numpy.ndarray</em>) &#8211; provide a bad pixel mask.</li>
+<li><strong>threeSigCut</strong> (<em>boolean</em>) &#8211; True to apply a 3 sigma cut before reporting the mean lookupTable.
+Only useful for ~5 or more stars.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.genPSF">
 <code class="descname">genPSF</code><span class="sig-paren">(</span><em>A=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.genPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.genPSF" title="Permalink to this definition">¶</a></dt>
-<dd><p>generate the psf with lookup table. Convenience function only.</p>
+<dd><p>Generate the psf with lookup table. Convenience function only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>A</strong> (<em>float</em>) &#8211; </td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.line">
 <code class="descname">line</code><span class="sig-paren">(</span><em>rate</em>, <em>angle</em>, <em>dt</em>, <em>pixScale=0.2</em>, <em>display=False</em>, <em>useLookupTable=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the TSF given input rate of motion, angle of motion, length of exposure, and pixelScale.</p>
-<p>Units choice is irrelevant, as long as they are all the same! eg. rate in &#8220;/hr, and dt in hr.
-Angle is in degrees +-90 from horizontal.</p>
-<p>display=True to see the TSF</p>
-<p>useLookupTable=True to use the lookupTable. OTherwise pure moffat is used.</p>
+<dd><p>Compute the TSF, given input rate of motion, angle of motion, length of exposure, and pixel scale.
+Choice of units is irrelevant, as long as they are all the same! eg. rate in &#8220;/hr, and dt in hr.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rate</strong> (<em>float</em>) &#8211; rate of sky motion of moving object</li>
+<li><strong>angle</strong> (<em>float</em>) &#8211; angle of sky motion of moving object in degrees +-90 from horizontal.</li>
+<li><strong>dt</strong> (<em>float</em>) &#8211; length of exposure</li>
+<li><strong>pixScale</strong> (<em>float</em>) &#8211; pixel scale of image</li>
+<li><strong>display</strong> (<em>boolean</em>) &#8211; True to see the TSF</li>
+<li><strong>useLookupTable</strong> (<em>boolean</em>) &#8211; True to use the lookup table. Otherwise pure moffat is used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.lineAperCorr">
 <code class="descname">lineAperCorr</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.lineAperCorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.lineAperCorr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an aperture correction at given radius. Linear interpolation between values found in
-computeRoundAperCorrFromTSF is used.</p>
+<dd><p>Produce an aperture correction at given radius.
+Uses linear interpolation between values found in computeRoundAperCorrFromTSF.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>float</em>) &#8211; radius to measure at</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return float:</th><td class="field-body">an aperture correction at given radius.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.moffat">
 <code class="descname">moffat</code><span class="sig-paren">(</span><em>rad</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.moffat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.moffat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a moffat profile evaluated at the radii in the input numpy array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rad</strong> (<em>numpy.ndarray</em>) &#8211; the radii to evaluate at</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return numpy.ndarray:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">a moffat profile evaluated at the input radii.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.plant">
 <code class="descname">plant</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>amp</em>, <em>indata</em>, <em>addNoise=True</em>, <em>useLinePSF=False</em>, <em>returnModel=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.plant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.plant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plant a star at coordinates x,y with amplitude amp.</p>
-<p>indata is the array in which you want to plant the source.
-addNoise=True to add gaussian noise.
-useLinePSF=True to use the TSF rather than the circular PSF.
-returnModel=True to not actually plant in the data, but return an array of the same size containing the TSF or
-PSF without noise added.</p>
+<dd><p>Plant a star at coordinates with a given amplitude.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) &#8211; the x coordinate to plant the star at</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate to plant the star at</li>
+<li><strong>amp</strong> (<em>float</em>) &#8211; the amplitude of the star to plant</li>
+<li><strong>indata</strong> (<em>numpy.ndarray</em>) &#8211; the array in which you want to plant the source.</li>
+<li><strong>addNoise</strong> (<em>boolean</em>) &#8211; True to add gaussian noise.</li>
+<li><strong>useLinePSF</strong> (<em>boolean</em>) &#8211; True to use the TSF rather than the circular PSF.</li>
+<li><strong>returnModel</strong> (<em>boolean</em>) &#8211; True to not actually plant in the data, but return an array of the same size
+containing the TSF or PSF without noise added.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -180,19 +318,52 @@ PSF without noise added.</p>
 <dt id="trippy.psf.modelPSF.remove">
 <code class="descname">remove</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>amp</em>, <em>data</em>, <em>useLinePSF=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>The opposite of plant.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) &#8211; the x coordinate to remove the star from</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the y coordinate to remove the star from</li>
+<li><strong>amp</strong> (<em>float</em>) &#8211; the amplitude of the star to remove</li>
+<li><strong>data</strong> (<em>numpy.ndarray</em>) &#8211; the array from which to remove the source.</li>
+<li><strong>useLinePSF</strong> (<em>boolean</em>) &#8211; False to use the circular PSF by default.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.roundAperCorr">
 <code class="descname">roundAperCorr</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.roundAperCorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.roundAperCorr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an aperture correction at given radius. Linear interpolation between values found in
-computeRoundAperCorrFromPSF is used.</p>
+<dd><p>Produce an aperture correction at given radius.
+Uses linear interpolation between values found in computeRoundAperCorrFromPSF.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>float</em>) &#8211; radius to measure at</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return float:</th><td class="field-body">an aperture correction at given radius.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="trippy.psf.modelPSF.writeto">
 <code class="descname">writeto</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.writeto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.writeto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenient file saving function to save the round PSF. Probably not necessary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; the filename to write the PSF to</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

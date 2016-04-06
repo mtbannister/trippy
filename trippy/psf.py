@@ -40,24 +40,11 @@ from .trippy_utils import (expand2d, downSample2d)
 from . import bgFinder
 
 
-class modelPSF:
+class modelPSF(object):
     """
-    Round and moving object psf class.
-
-    The intent of this class is to provide a model PSF of both stationary and trailed point sources.
-    The basic profile is a moffat profile with super sampled constant look up table. Both are used
-    with linear convolution to calculate the trailed source PSF.
-
-    modelPSF takes as input:
-    -x,y are arrays of length equal to the width and height of the desired PSF image.
-     eg. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix
-    -alpha, beta are initial guesses for the moffat profile to be used. 5 and 2 are usually pretty good
-    -repFact is the supersampling factor. 10 is default, though for improvement in speed, 5 can be used
-     without much loss of PSF or photometric precision
-
-    optional arguments:
-    -verbose = True if you want to see a lot of unnecessary output
-    -restore = psf filename if you want to restore from a previously saved psf file.
+    Provides a model PSF of either stationary or trailed point sources.
+    The basic profile is a moffat profile with super sampled constant look up table.
+    Both are used with linear convolution to calculate the trailed source PSF.
 
     The general steps for psf generation and photometry are:
     -initialization
@@ -66,7 +53,16 @@ class modelPSF:
     -line convolution
     -linear aperture correction estimation
 
-
+    :param int or numpy.arange(x) x: the width of the desired PSF image: in pixels, or an array of that length
+                                     e.g. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix
+    :param int or numpy.arange(x) y: the height of the PSF in pixels: in pixels, or an array of that length
+    :param float alpha: the initial moffat parameter. Suggest 5
+    :param float beta: the initial moffat parameter. Suggest 2
+    :param int repFact: the supersampling factor. Only 5 and 10 are well tested!
+                        10 is default, though for improvement in speed,
+                        5 can be used without much loss of PSF or photometric precision
+    :param boolean verbose: to see a bunch of unnecessary, but informative output.
+    :param str restore: restore a previously saved psf with this filename.
     """
 
     def psfStore(self, fn):
@@ -187,17 +183,6 @@ class modelPSF:
         print '   PSF restored.\n'
 
     def __init__(self, x=-1, y=-1, alpha=-1, beta=-1, repFact=10, verbose=False, restore=False):
-        """Initialize the PSF.
-
-        :param x (int or numpy.arange(x)) : the width of the PSF in pixels
-        :param y (int or numpy.arange(x)) : the height of the PSF in pixels
-        :param alpha (float) : the initial moffat parameter
-        :param beta (float) : the initial moffat parameter
-        :param repFact (int) : the supersampling factor. Only 5 and 10 are well tested!
-        :param verbose (boolean) : to see a bunch of unnecessary, but informative output.
-        :param restore (str) to restore a psf with this filename.
-        """
-
         self.nForFitting = 0
         self.imData = None
 
