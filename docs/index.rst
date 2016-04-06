@@ -28,7 +28,7 @@ PSF
 .. automodule:: trippy.psfStarChooser
    :members:
 
-.. automodule:: trippy_utils
+.. automodule:: trippy.trippy_utils
    :members:
 
 .. automodule:: trippy.MCMCfit.MCMCfit

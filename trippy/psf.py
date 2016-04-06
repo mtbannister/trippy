@@ -70,9 +70,9 @@ class modelPSF:
     """
 
     def psfStore(self, fn):
-        """
-        Store the psf into a fits file that you can view and reopen at a later point. The only option is the fits file
-        name.
+        """Store the psf into a fits file that you can view and reopen at a later point.
+
+        :param str fn: the fits filename.
         """
         name = fn.split('.fits')[0]
 

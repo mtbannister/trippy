@@ -41,17 +41,6 @@
 <p>Contents:</p>
 <div class="section" id="module-trippy.psf">
 <span id="psf"></span><h2>PSF<a class="headerlink" href="#module-trippy.psf" title="Permalink to this headline">¶</a></h2>
-<p>Copyright (C) 2016  Wesley Fraser</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
 <dl class="class">
 <dt id="trippy.psf.modelPSF">
 <em class="property">class </em><code class="descclassname">trippy.psf.</code><code class="descname">modelPSF</code><span class="sig-paren">(</span><em>x=-1</em>, <em>y=-1</em>, <em>alpha=-1</em>, <em>beta=-1</em>, <em>repFact=10</em>, <em>verbose=False</em>, <em>restore=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF" title="Permalink to this definition">¶</a></dt>
@@ -176,8 +165,15 @@ PSF without noise added.</p>
 <dl class="method">
 <dt id="trippy.psf.modelPSF.psfStore">
 <code class="descname">psfStore</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psf.html#modelPSF.psfStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psf.modelPSF.psfStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store the psf into a fits file that you can view and reopen at a later point. The only option is the fits file
-name.</p>
+<dd><p>Store the psf into a fits file that you can view and reopen at a later point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>str</em>) &#8211; the fits filename.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -201,18 +197,59 @@ computeRoundAperCorrFromPSF is used.</p>
 
 </dd></dl>
 
-<span class="target" id="module-trippy.bgFinder"></span><p>Copyright (C) 2016  Wesley Fraser</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
-<dl class="class">
+<dl class="function">
+<dt id="trippy.psf.randn">
+<code class="descclassname">trippy.psf.</code><code class="descname">randn</code><span class="sig-paren">(</span><em>d0</em>, <em>d1</em>, <em>...</em>, <em>dn</em><span class="sig-paren">)</span><a class="headerlink" href="#trippy.psf.randn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sample (or samples) from the &#8220;standard normal&#8221; distribution.</p>
+<p>If positive, int_like or int-convertible arguments are provided,
+<cite>randn</cite> generates an array of shape <code class="docutils literal"><span class="pre">(d0,</span> <span class="pre">d1,</span> <span class="pre">...,</span> <span class="pre">dn)</span></code>, filled
+with random floats sampled from a univariate &#8220;normal&#8221; (Gaussian)
+distribution of mean 0 and variance 1 (if any of the  are
+floats, they are first converted to integers by truncation). A single
+float randomly sampled from the distribution is returned if no
+argument is provided.</p>
+<p>This is a convenience function.  If you want an interface that takes a
+tuple as the first argument, use <cite>numpy.random.standard_normal</cite> instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>d1, ..., dn</strong> (<em>d0,</em>) &#8211; The dimensions of the returned array, should be all positive.
+If no argument is given a single Python float is returned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>Z</strong> &#8211;
+A <code class="docutils literal"><span class="pre">(d0,</span> <span class="pre">d1,</span> <span class="pre">...,</span> <span class="pre">dn)</span></code>-shaped array of floating-point samples from
+the standard normal distribution, or a single such float if
+no parameters were supplied.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ndarray or float</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><code class="xref py py-func docutils literal"><span class="pre">random.standard_normal()</span></code></dt>
+<dd>Similar, but takes a tuple as its argument.</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>For random samples from , use:</p>
+<p><code class="docutils literal"><span class="pre">sigma</span> <span class="pre">*</span> <span class="pre">np.random.randn(...)</span> <span class="pre">+</span> <span class="pre">mu</span></code></p>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+<span class="go">2.1923875335537315 #random</span>
+</pre></div>
+</div>
+<p>Two-by-four array of samples from N(3, 6.25):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
+<span class="go">array([[-4.49401501,  4.00950034, -1.81814867,  7.29718677],  #random</span>
+<span class="go">       [ 0.39924804,  4.68456316,  4.99394529,  4.84057254]]) #random</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="module-trippy.bgFinder"></span><dl class="class">
 <dt id="trippy.bgFinder.bgFinder">
 <em class="property">class </em><code class="descclassname">trippy.bgFinder.</code><code class="descname">bgFinder</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/bgFinder.html#bgFinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.bgFinder.bgFinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the background estimate of the inputted data. eg.</p>
@@ -241,18 +278,7 @@ fraserMode. Otherwise, the gaussian mean is returned.</div></blockquote>
 
 </dd></dl>
 
-<span class="target" id="module-trippy.pill"></span><p>Copyright (C) 2016  Wesley Fraser</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
-<dl class="function">
+<span class="target" id="module-trippy.pill"></span><dl class="function">
 <dt id="trippy.pill.bgselect">
 <code class="descclassname">trippy.pill.</code><code class="descname">bgselect</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/pill.html#bgselect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.pill.bgselect" title="Permalink to this definition">¶</a></dt>
 <dd><p>I don&#8217;t think this is actually used. Haven&#8217;t confirmed yet.</p>
@@ -324,18 +350,7 @@ display=True to see a radial aperture correction plot.</p>
 
 </dd></dl>
 
-<span class="target" id="module-trippy.psfStarChooser"></span><p>Copyright (C) 2016  Wesley Fraser</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
-<dl class="class">
+<span class="target" id="module-trippy.psfStarChooser"></span><dl class="class">
 <dt id="trippy.psfStarChooser.starChooser">
 <em class="property">class </em><code class="descclassname">trippy.psfStarChooser.</code><code class="descname">starChooser</code><span class="sig-paren">(</span><em>data</em>, <em>XWIN_IMAGE</em>, <em>YWIN_IMAGE</em>, <em>FLUX_AUTO</em>, <em>FLUXERR_AUTO</em>, <em>zscaleNsamp=200.0</em>, <em>zscaleContrast=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/psfStarChooser.html#starChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.psfStarChooser.starChooser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class for psf.py to choose good psf stars. Basically, it will provide a window in which
@@ -345,13 +360,13 @@ The top right panel is chi^2 of the fits versus FWHM in pix, with historgrams of
 Bottom left is the radial profiles of the fits. When one left-clicks on a point, it will show the measured radial
 profile of the selected source, as well as a cutout of that source.</p>
 <p><strong>To mark it bad, right click. Red marked sources are excluded from the fitting.</strong></p>
-<p>Further sources can be exlcuded by zooming the main panel. Only the  blue sources within the zoom window are considered.</p>
+<p>Further sources can be excluded by zooming the main panel. Only the blue sources within the zoom window are considered.</p>
 <p>It takes as input:
 -data: the image data loaded up through pyfits or astropy.io.fits
--XWIN_IMAGE, YWIN_IMAGE, FLUX_AUTO, FLUXERR_AUTO are numpy arrays of the x,y coordinates, flux, and flux uncertainty of a user</p>
+-XWIN_IMAGE, YWIN_IMAGE, FLUX_AUTO, FLUXERR_AUTO are numpy arrays of the x,y coordinates, flux, and flux uncertainty</p>
 <blockquote>
-<div>provided list of candidate stars. I used the names of sextractor parameters because these can be easily extracted
-from sextractor output usig those names.</div></blockquote>
+<div>of a user-provided list of candidate stars.
+I used the names of sextractor parameters because these can be easily extracted from sextractor output using those names.</div></blockquote>
 <p>-zscaleNsamp and zscaleContrast control the zscaling of the display.</p>
 <p>The actual chooser is launched with a self call to the initialized object. The call takes as parameters:
 - radius in pixels for the moffat fitting
@@ -382,18 +397,64 @@ starChooser=psfStarChooser.starChooser(x,y,f,e)
 
 </dd></dl>
 
-<span class="target" id="module-trippy.scamp.makeParFiles"></span><p>Copyright (C) 2016  Wesley Fraser</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
+<span class="target" id="module-trippy.trippy_utils"></span><dl class="function">
+<dt id="trippy.trippy_utils.downSample2d">
+<code class="descclassname">trippy.trippy_utils.</code><code class="descname">downSample2d</code><span class="sig-paren">(</span><em>a</em>, <em>sampFact</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/trippy_utils.html#downSample2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.trippy_utils.downSample2d" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; </li>
+<li><strong>sampFact</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a downsampled numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
+<dt id="trippy.trippy_utils.expand2d">
+<code class="descclassname">trippy.trippy_utils.</code><code class="descname">expand2d</code><span class="sig-paren">(</span><em>a</em>, <em>repFact</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/trippy_utils.html#expand2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.trippy_utils.expand2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebin a 2d array to a large size.
+output will be xrepfact, xrepfact of the original
+Basic memory enhancements included to speed things up.
+:param a:
+:param repFact:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="trippy.trippy_utils.extent">
+<code class="descclassname">trippy.trippy_utils.</code><code class="descname">extent</code><span class="sig-paren">(</span><em>r1</em>, <em>r2</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/trippy_utils.html#extent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.trippy_utils.extent" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r1</strong> &#8211; </li>
+<li><strong>r2</strong> &#8211; </li>
+<li><strong>n</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="trippy.trippy_utils.line">
+<em class="property">class </em><code class="descclassname">trippy.trippy_utils.</code><code class="descname">line</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/trippy_utils.html#line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.trippy_utils.line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-trippy.MCMCfit.MCMCfit"></span><span class="target" id="module-trippy.scamp.makeParFiles"></span><dl class="function">
 <dt id="trippy.scamp.makeParFiles.writeConv">
 <code class="descclassname">trippy.scamp.makeParFiles.</code><code class="descname">writeConv</code><span class="sig-paren">(</span><em>fileName='default.conv'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/scamp/makeParFiles.html#writeConv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.scamp.makeParFiles.writeConv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a default sextractor convolution kernel.</p>
@@ -443,18 +504,7 @@ working directory.</p>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-trippy.scamp.scamp"></span><p>Copyright (C) 2016  Wesley Fraser</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
-<dl class="function">
+<span class="target" id="module-trippy.scamp.scamp"></span><dl class="function">
 <dt id="trippy.scamp.scamp.getCatalog">
 <code class="descclassname">trippy.scamp.scamp.</code><code class="descname">getCatalog</code><span class="sig-paren">(</span><em>catalogName</em>, <em>type='FITS_LDAC'</em>, <em>paramFile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/scamp/scamp.html#getCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.scamp.scamp.getCatalog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the detections in the provided catalog name.</p>
@@ -498,7 +548,7 @@ If cowardly, overWrite=False, a new file will be created with &#8216;s&#8217; pr
 <dl class="function">
 <dt id="trippy.scamp.scamp.writeDS9Regions">
 <code class="descclassname">trippy.scamp.scamp.</code><code class="descname">writeDS9Regions</code><span class="sig-paren">(</span><em>sexCatalog</em>, <em>regionFile</em>, <em>wcsImage=None</em>, <em>radius=15</em>, <em>colour=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trippy/scamp/scamp.html#writeDS9Regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trippy.scamp.scamp.writeDS9Regions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Utility to write ds9 regions of your sectractor detections.</p>
+<dd><p>Utility to write ds9 regions of your SExtractor detections.</p>
 </dd></dl>
 
 </div>
