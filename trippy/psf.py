@@ -43,18 +43,8 @@ from . import bgFinder
 class modelPSF(object):
     """
     Provides a model PSF of either stationary or trailed point sources.
-    The basic profile is a moffat profile with super sampled constant look up table.
-    Both are used with linear convolution to calculate the trailed source PSF.
-
-    The general steps for psf generation and photometry are:
-    -initialization
-    -lookup table generation
-    -psf generation
-    -line convolution
-    -linear aperture correction estimation
 
     :param int or numpy.arange(x) x: the width of the desired PSF image: in pixels, or an array of that length
-                                     e.g. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix
     :param int or numpy.arange(x) y: the height of the PSF in pixels: in pixels, or an array of that length
     :param float alpha: the initial moffat parameter. Suggest 5
     :param float beta: the initial moffat parameter. Suggest 2
@@ -63,6 +53,19 @@ class modelPSF(object):
                         5 can be used without much loss of PSF or photometric precision
     :param boolean verbose: to see a bunch of unnecessary, but informative output.
     :param str restore: restore a previously saved psf with this filename.
+
+    The basic PSF profile is a moffat profile with super-sampled constant look up table.
+    Both are used with linear convolution to calculate the trailed source PSF.
+
+    e.g. x=numpy.arange(50), y=numpy.arange(70) would create a psf 50x70 pix.
+
+    The general steps for psf generation and photometry are:
+
+    * initialization
+    * lookup table generation
+    * psf generation
+    * line convolution
+    * linear aperture correction estimation
     """
 
     def psfStore(self, fn):
@@ -286,16 +289,17 @@ class modelPSF(object):
 
     def computeRoundAperCorrFromPSF(self, radii, useLookupTable=True, display=True, displayAperture=True):
         """
-        This computes the aperture correction directly from the PSF.
-        These values will be used for interpolation to other values.
-        The aperture correction is with respect to the largest aperture provided in radii.
-        I recommend 4*FWHM.
+        Compute the aperture correction directly from the PSF.
 
         :param numpy.ndarray radii: an array of radii on which to calculate the aperture corrections.
                                     I recommend at least 10 values between 1 and 4 FWHM.
         :param boolean useLookupTable: calculate either with just the moffat profile, or with lookuptable included.
         :param boolean display: True to show you some plots.
         :param boolean displayAperture: True to show you the aperture at each radius.
+
+        These values will be used for interpolation to other values.
+        The aperture correction is with respect to the largest aperture provided in radii.
+        I recommend 4*FWHM.
         """
 
         self.aperCorrRadii = radii * 1.0
@@ -327,10 +331,11 @@ class modelPSF(object):
     def roundAperCorr(self, r):
         """
         Produce an aperture correction at given radius.
-        Uses linear interpolation between values found in computeRoundAperCorrFromPSF.
 
         :param float r: radius to measure at
         :return float: an aperture correction at given radius.
+
+        Uses linear interpolation between values found in computeRoundAperCorrFromPSF.
         """
 
         if self.aperCorrFunc <> None:
@@ -341,10 +346,7 @@ class modelPSF(object):
 
     def computeLineAperCorrFromTSF(self, radii, l, a, display=True, displayAperture=True):
         """
-        This computes the aperture correction directly from the TSF.
-        These vaules will be used for interpolation to other values.
-        The aperture correction is with respect to the largest aperture provided in radii.
-        I recommend 4*FWHM.
+        Compute the aperture correction directly from the TSF.
 
         :param numpy.ndarray radii: an array of radii on which to calculate the aperture corrections.
                                     I recommend at least 10 values between 1 and 4 FWHM.
@@ -353,6 +355,10 @@ class modelPSF(object):
         :param boolean useLookupTable: calculate either with just the moffat profile, or with lookuptable included.
         :param boolean display: True to show you some plots.
         :param boolean displayAperture: True to show you the aperture at each radius.
+
+        These vaules will be used for interpolation to other values.
+        The aperture correction is with respect to the largest aperture provided in radii.
+        I recommend 4*FWHM.
         """
 
         self.lineAperCorrRadii = radii * 1.0
@@ -381,10 +387,11 @@ class modelPSF(object):
     def lineAperCorr(self, r):
         """
         Produce an aperture correction at given radius.
-        Uses linear interpolation between values found in computeRoundAperCorrFromTSF.
 
         :param float r: radius to measure at
         :return float: an aperture correction at given radius.
+
+        Uses linear interpolation between values found in computeRoundAperCorrFromTSF.
         """
         if self.lineAperCorrFunc <> None:
             return self.lineAperCorrFunc(r) - num.min(self.lineAperCorrs)
@@ -405,12 +412,14 @@ class modelPSF(object):
 
     def FWHM(self, fromMoffatProfile=False):
         """
-        Return the moffat profile of the PSF. If fromMoffatProfile=True, or if the lookupTable is not yet calculated,
+        Return the moffat profile of the PSF.
+
+        :param boolean fromMoffatProfile:
+
+        If fromMoffatProfile=True, or if the lookupTable is not yet calculated,
         the FWHM from a pure moffat profile is returned. Otherwise the lookup table is used.
 
         Needs to be refactored due to command coupling.
-
-        :param boolean fromMoffatProfile:
         """
 
         if (not self.fitted) or fromMoffatProfile:
@@ -450,8 +459,7 @@ class modelPSF(object):
 
     def line(self, rate, angle, dt, pixScale=0.2, display=False, useLookupTable=True):
         """
-        Compute the TSF, given input rate of motion, angle of motion, length of exposure, and pixel scale.
-        Choice of units is irrelevant, as long as they are all the same! eg. rate in "/hr, and dt in hr.
+        Compute the trailed source function (TSF).
 
         :param float rate: rate of sky motion of moving object
         :param float angle: angle of sky motion of moving object in degrees +-90 from horizontal.
@@ -459,6 +467,8 @@ class modelPSF(object):
         :param float pixScale: pixel scale of image
         :param boolean display: True to see the TSF
         :param boolean useLookupTable: True to use the lookup table. Otherwise pure moffat is used.
+
+        Choice of units is irrelevant, as long as they are all the same! eg. rate in "/hr, and dt in hr.
         """
 
         self.rate = rate
@@ -596,7 +606,7 @@ class modelPSF(object):
 
     def remove(self, x, y, amp, data, useLinePSF=False):
         """
-        The opposite of plant.
+        The opposite of plant: removes a source at a given location from an image.
 
         :param int x: the x coordinate to remove the star from
         :param int y: the y coordinate to remove the star from
