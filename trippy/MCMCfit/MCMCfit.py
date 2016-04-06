@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# coding=utf-8
 
 # Copyright (C) 2016  Wesley Fraser
 #
@@ -26,6 +27,18 @@ from trippy import bgFinder
 
 
 def lnprob(r, dat, lims, psf, ue, useLinePSF, verbose=False):
+    '''
+
+
+    :param r:
+    :param dat:
+    :param lims:
+    :param psf:
+    :param ue:
+    :param useLinePSF:
+    :param verbose:
+    :return:
+    '''
     psf.nForFitting += 1
     (x, y, amp) = r
     (a, b) = dat.shape
@@ -37,6 +50,17 @@ def lnprob(r, dat, lims, psf, ue, useLinePSF, verbose=False):
 
 
 def lnprobDouble(r, dat, lims, psf, ue, useLinePSF, verbose=False):
+    '''
+
+    :param r:
+    :param dat:
+    :param lims:
+    :param psf:
+    :param ue:
+    :param useLinePSF:
+    :param verbose: print the nForFitting, x, y, amplitude, X, Y, Amplitude, and chisq
+    :return:
+    '''
     psf.nForFitting += 1
     (A, B) = dat.shape
     (X, Y, AMP, x, y, amp) = r
@@ -47,23 +71,19 @@ def lnprobDouble(r, dat, lims, psf, ue, useLinePSF, verbose=False):
     chi = -0.5 * num.sum((diff ** 2 / ue ** 2)[lims[0]:lims[1], lims[2]:lims[3]])
     # chi=-num.sum(diff**2)**0.5
     if verbose:
-        print '{:6d} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 10.3f}'.format(psf.nForFitting, x, y, amp,
-                                                                                             X, Y, AMP, chi)
+        print('{:6d} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 8.3f} {: 10.3f}'.format(psf.nForFitting, x, y, amp,
+                                                                                             X, Y, AMP, chi))
     return chi
 
 
-class MCMCfitter:
+class MCMCfitter(object):
+    """A fitter object which essentially wraps convenience around the already convenient emcee code.
+
+        :param trippy.modelPSF psf: the trippy model psf object
+        :param numpy.ndarray imageData: the data on which the fit will be performed.
+        :param str restore: the filename to import of a a dump fit file saved by saveState.
+    """
     def __init__(self, psf, imageData, restore=False):
-        """
-        Initialize a fitter object which essentially wraps convenience around the already convenient emcee code.
-
-        Input:
-        psf is the trippy model psf object
-        imageData is the data on which the fit will be performed.
-
-        Use restore=fileName to import a dump fit file saved by saveState.
-
-        """
         self.psf = psf
         self.imageData = num.copy(imageData)
         self.fitted = False
@@ -75,27 +95,32 @@ class MCMCfitter:
                         nWalkers=20, nBurn=10, nStep=20,
                         bg=None, useErrorMap=False,
                         useLinePSF=False, verbose=False):
-
         """
         Using emcee (It's hammer time!) the provided image is fit using
         the provided psf to find the best x,y and amplitude, and confidence
         range on the fitted parameters.
 
-        x_in, y_in, m_in - initial guesses on the true centroid and amplitude of the object
-        fitWidth - the width +- of x_in/y_in of the data used in the fit
-        nWalkers, nBurn, nStep - emcee fitting paramters. If you don't know what these are RTFM
-        bg - the background of the image. Needed for the uncertainty table.
-             **Defaults to None.** When set to default, it will invoke
-             the background measurement and apply that. Otherwise, it assumes you are dealing with
-             background subtracted data already.
-        useErrorMap - if true, a simple pixel uncertainty map is used in the fit. This is adopted as
-                      ue_ij=(imageData_ij+bg)**0.5, that is, the poisson noise estimate. Note the fit confidence range
-                      is only honest if useErrorMap=True.
-        useLinePSF - use the TSF? If not, use the PSF
-        verbose - if set to true, lots of information printed to screen
+        :param float x_in: initial guess on the x coordinate of the true centroid of the object
+        :param float y_in: initial guess on the y coordinate of the true centroid of the object
+        :param float m_in: initial guess on the true amplitude of the object
+        :param float fitWidth: the width +- of x_in/y_in of the data used in the fit
+        :param int nWalkers: The number of Goodman & Weare “walkers”. See :class:`emcee.EnsembleSampler`.
+        :param int nBurn: The number of iterations to run the chain during burn-in.
+                          See :class:`emcee.EnsembleSampler.run_mcmc`.
+        :param int nStep: The number of iterations to run the chain in the production run.
+                          See :class:`emcee.EnsembleSampler.run_mcmc`.
+        :param bg: the background of the image. Needed for the uncertainty table.
+                   **Defaults to None.**
+                   When set to default, it will invoke the background measurement and apply that.
+                   Otherwise, it assumes you are dealing with background subtracted data already.
+        :param boolean useErrorMap: If true, a simple pixel uncertainty map is used in the fit.
+                                    This is adopted as ue_ij=(imageData_ij+bg)**0.5, that is, the poisson noise estimate.
+                                    Note the fit confidence range is only honest if useErrorMap=True.
+        :param boolean useLinePSF: If True, use the TSF. If False, use the PSF
+        :param boolean verbose: lots of information printed to screen
         """
 
-        print "Initializing sampler"
+        print("Initializing sampler")
 
         self.nForFitting = 0
         self.useLinePSF = useLinePSF
@@ -134,10 +159,10 @@ class MCMCfitter:
 
         sampler = emcee.EnsembleSampler(nWalkers, nDim, lnprob,
                                         args=[dat, (ai, bi, ci, di), self.psf, ue, useLinePSF, verbose])
-        print "Executing burn-in... this may take a while."
+        print("Executing burn-in... this may take a while.")
         pos, prob, state = sampler.run_mcmc(r0, nBurn)
         sampler.reset()
-        print "Executing production run... this will also take a while."
+        print("Executing production run... this will also take a while.")
         pos, prob, state = sampler.run_mcmc(pos, nStep, rstate0=state)
         self.samps = sampler.chain
         self.probs = sampler.lnprobability
@@ -148,16 +173,16 @@ class MCMCfitter:
         """
         Return the best point and confidence interval.
 
-        confidenceRange - the range for the returned confidence interval
+        :param float confidenceRange: the range for the returned confidence interval
+        :return tuple: (bestPoint, confidenceArray) Will return None if a fit hasn't been run yet.
 
-        Returns (bestPoint, confidenceArray) Will return None if a fit hasn't been run yet.
-
-        If the fit is a binary fit (6 parameters) fitRange will have a 10 elements which is the range of uncertain on
-        the brightness ratio, and the Primary-Secondary separation in x/y and total (in pixels).
+        If the fit is to a **binary** source (6 parameters),
+        fitRange will have 10 elements, which is the range of uncertainty on the brightness ratio,
+        and the Primary-Secondary separation in x/y and total (in pixels).
         """
 
         if not self.fitted:
-            print "You haven't actually run a fit yet!"
+            print("You haven't actually run a fit yet!")
             return None
 
         (Y, X, b) = self.samps.shape
@@ -174,7 +199,7 @@ class MCMCfitter:
         goodSamps = goodSamps[args]
 
         bp = goodSamps[-1]
-        print 'Best point:', bp
+        print('Best point:', bp)
         self.residual = self.psf.remove(bp[0], bp[1], bp[2], self.dat, useLinePSF=self.useLinePSF)
         if b == 6:
             self.residual = self.psf.remove(bp[3], bp[4], bp[5], self.residual, useLinePSF=self.useLinePSF)
@@ -216,19 +241,26 @@ class MCMCfitter:
         the provided psf to find the best x,y and amplitude, and confidence
         range on the fitted parameters.
 
-        x_in, y_in, m_in, X_in, Y_in, bRat - initial guesses on the true centroids, the amplitude and brightness ratio
-                                             of the two sources
-        fitWidth - the width +- of x_in/y_in of the data used in the fit
-        nWalkers, nBurn, nStep - emcee fitting paramters. If you don't know what these are RTFM
-        bg - the background of the image. Needed for the uncertainty table.
-             **Defaults to None.** When set to default, it will invoke
-             the background measurement and apply that. Otherwise, it assumes you are dealing with
-             background subtracted data already.
-        useErrorMap - if true, a simple pixel uncertainty map is used in the fit. This is adopted as
-                      ue_ij=(imageData_ij+bg)**0.5, that is, the poisson noise estimate. Note the fit confidence range
-                      is only honest if useErrorMap=True.
-        useLinePSF - use the TSF? If not, use the PSF
-        verbose - if set to true, lots of information printed to screen
+        :param float x_in: initial guess on the x coordinate of the true centroid of the primary of the pair
+        :param float y_in: initial guess on the y coordinate of the true centroid of of the primary of the pair
+        :param float X_in: initial guess on the x coordinate of the true centroid of the secondary of the pair
+        :param float Y_in: initial guess on the y coordinate of the true centroid of the secondary of the pair
+        :param float bRat_in: initial guess on the brightness ratio of the two sources
+        :param float fitWidth: the width +- of x_in/y_in of the data used in the fit
+        :param int nWalkers: The number of Goodman & Weare “walkers”. See :class:`emcee.EnsembleSampler`.
+        :param int nBurn: The number of iterations to run the chain during burn-in.
+                          See :class:`emcee.EnsembleSampler.run_mcmc`.
+        :param int nStep: The number of iterations to run the chain in the production run.
+                          See :class:`emcee.EnsembleSampler.run_mcmc`.
+        :param bg: the background of the image. Needed for the uncertainty table.
+                   **Defaults to None.**
+                   When set to default, it will invoke the background measurement and apply that.
+                   Otherwise, it assumes you are dealing with background subtracted data already.
+        :param boolean useErrorMap: If true, a simple pixel uncertainty map is used in the fit.
+                                    This is adopted as ue_ij=(imageData_ij+bg)**0.5, that is, the poisson noise estimate.
+                                    Note the fit confidence range is only honest if useErrorMap=True.
+        :param boolean useLinePSF: If True, use the TSF. If False, use the PSF
+        :param boolean verbose: lots of information printed to screen
         """
 
         self.useLinePSF = useLinePSF
@@ -278,12 +310,19 @@ class MCMCfitter:
     def saveState(self, fn='MCState.pickle'):
         """
         Save the fitted state to the provided filename.
+
+        :param str fn: the filename to pickle the fitted state to.
         """
         if not self.fitted: raise Exception('You must run a fit before you can save the fit results.')
         with open(fn, 'w+') as han:
             pickle.dump([self.samps, self.probs, self.dat, self.useLinePSF], han)
 
     def _restoreState(self, fn='MCState.pickle'):
+        '''
+        Restore a previously fitted state.
+
+        :param fn: the filename to unpickle
+        '''
         with open(fn) as han:
             (self.samps, self.probs, self.dat, self.useLinePSF) = pickle.load(han)
         self.fitted = True

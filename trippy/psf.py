@@ -356,7 +356,7 @@ class modelPSF(object):
         :param boolean display: True to show you some plots.
         :param boolean displayAperture: True to show you the aperture at each radius.
 
-        These vaules will be used for interpolation to other values.
+        These values will be used for interpolation to other values.
         The aperture correction is with respect to the largest aperture provided in radii.
         I recommend 4*FWHM.
         """
@@ -613,6 +613,7 @@ class modelPSF(object):
         :param float amp: the amplitude of the star to remove
         :param numpy.ndarray data: the array from which to remove the source.
         :param boolean useLinePSF: False to use the circular PSF by default.
+        :return :
         """
 
         mo = self.plant(x, y, amp, data, addNoise=False, returnModel=True, useLinePSF=useLinePSF)
@@ -652,6 +653,7 @@ class modelPSF(object):
         :param boolean fixAB: True to fit only the amplitude.
         :param boolean fitXY: *** not currently implemented***
         :param boolean fitMaxRadius: *** not currently implemented ***
+        :return :
         """
 
         self.verbose = verbose
@@ -733,6 +735,7 @@ class modelPSF(object):
         :param numpy.ndarray bpMask: provide a bad pixel mask.
         :param boolean threeSigCut: True to apply a 3 sigma cut before reporting the mean lookupTable.
                                     Only useful for ~5 or more stars.
+        :return :
         """
 
         adjCentXs = centXs - 0.5
