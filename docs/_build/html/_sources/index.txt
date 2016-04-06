@@ -10,8 +10,12 @@ Welcome to trippy's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
+   self
 
+
+PSF
+---
 .. automodule:: trippy.psf
    :members:
 
