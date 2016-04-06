@@ -1,33 +1,25 @@
 #! /usr/bin/env python
-
-"""
-Copyright (C) 2016  Wesley Fraser
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
+from __future__ import absolute_import
+# Copyright (C) 2016  Wesley Fraser
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'Wesley Fraser (@wtfastro, github: fraserw <westhefras@gmail.com>), Academic email: wes.fraser@qub.ac.uk'
 
-import numpy as num
-from scipy import signal
-import sys,os
-import pylab as pyl
-from scipy import optimize as opti,interpolate as interp
-import scipy as sci
-import bgFinder
-#import weightedMeanSTD
+import sys
+import os
+from scipy import (optimize as opti, interpolate as interp, signal, randn)
 
 import imp
 try:
@@ -41,11 +33,8 @@ else:
     import pyfits as pyf
 
 from pill import pillPhot
-
-from trippy_utils import *
-
-
-
+from trippy_utils import (expand2d, downSample2d)
+import bgFinder
 
 
 class modelPSF:
@@ -594,7 +583,7 @@ class modelPSF:
 
         (a,b)=psf.shape
         if addNoise:
-            psf+=sci.randn(a,b)*psf**0.5
+            psf+=randn(a,b)*psf**0.5
 
         (A,B)=indata.shape
         bigOut=num.zeros((A+2*self.boxSize,B+2*self.boxSize),dtype=indata.dtype)
